@@ -1,0 +1,52 @@
+#+TITLE: CSE-343 | Local DNS Attack Lab
+#+AUTHOR: Marc Soda Jr
+#+OPTIONS: num:nil
+#+STARTUP: overview
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+* 2.4 Testing the DNS Setup
+** Get IP of attacker32.com
+[[./images/1-001.jpg]]
+- The IP is 10.9.0.153
+** Get IP of example.com
+[[./images/1-002.jpg]]
+- The IP is 93.184.216.34
+** Directly query the attacker nameserver for example.com
+[[./images/1-003.jpg]]
+- The IP is 1.2.3.4
+* 3.1 Directly Spoofing Response to the User
+Python Code
+[[./images/1-009.jpg]]
+Dig Result
+[[./images/1-005.jpg]]
+Cache dump
+[[./images/1-016.jpg]]
+- This code always sends the packet as being from the DNS server and to the user. The DNS server is not actually communicated with (by the attacker) at all.
+- Because the IP was received to be 1.2.3.4, the attack was successful.
+- This attack does not poison the local DNS cache because no communication is made with it by the attacker.
+* 3.2 DNS Cache Poisoning Attack - Spoofing Answers
+[[./images/1-006.jpg]]
+[[./images/1-005.jpg]]
+[[./images/1-008.jpg]]
+- I changed the code by allowing the program to communicate directly with the DNS server rather than just the user.
+- Because the local DNS server is now attacked directly, the cache is poisoned (see third screenshot). After stopping the attack, subsequent digs will continue to point to 1.2.3.4.
+- The attack was successful.
+* 3.3 Spoofing NS Records
+[[./images/1-007.jpg]]
+[[./images/1-011.jpg]]
+[[./images/1-012.jpg]]
+- I changed the code by adding an NS section (authority section).
+- The nameserver is successfully added to the authority section and cached by the DNS server
+* 3.4 Spoofing NS Records for Another Domain
+[[./images/1-015.jpg]]
+[[./images/1-014.jpg]]
+[[./images/1-013.jpg]]
+- I changed the code by adding another NS section.
+- It was successfully received that the nameserver for google.com is ns.attacker32.com.
+- However, only the example.com nameserver was cached.
+* 3.5 Spoofing Records in the Additional Section
+[[./images/1-018.jpg]]
+[[./images/1-017.jpg]]
+[[./images/1-019.jpg]]
+- I changed the code by adding three additional sections and manipulating the NS sections. These changes reflect the image provided in the lab.
+- Because the authority and additional sections reflect the image provided in the lab, the attack was successful.
+- Only the information pertaining to example.com was cached. facebook.com and ns.example.net are left out of the cache.

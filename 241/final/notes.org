@@ -1,0 +1,45 @@
+* TODO:
+** data validation
+- drivers license
+- age
+- CLEANER USER INPUT, CHECKING DATA TYPES, ETC
+- etc
+** when displaying a rental, if returned is null, don't say null. say 'not returned' or something like that
+** make it so a customer can only have x reservations at a time
+* Employee interface
+** menu:
+*** list outstanding charges for your location
+*** view user history
+- rental and reservations
+*** rent a car
+*** return a car
+- adding a charge to a customer
+*** update a charge
+*** view vehicles
+- get number of vehicles. they may want to make a request for more vehicles
+*** create customer
+* manager interface
+- no input needed
+** menu:
+*** view all unpaid charges
+*** add a location
+*** view all locations with the number of cars they have
+- number out and total number
+*** add cars
+*** remove cars
+- probably not a good idea because of FK constraint
+*** move cars
+- maybe
+*** view unpaid charges for an individual user
+* customer interface
+** menu
+*** edit profile
+*** view user info
+*** update user info
+
+
+
+* RIGOROUSLY TEST PASSING BETWEEN FUNCTIONS BECAUSE SOME OF THE RECURSION MAY BE WEIRD AND PLACE YOU BACK INTO AN UNNATURAL METHOD IF A RETURN WAS DONE INCORRECTLY
+
+            c = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:cse241", login, pwd);
+            c = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:cse241", "masa20", "1234");

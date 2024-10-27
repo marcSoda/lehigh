@@ -1,0 +1,8 @@
+USAGE:
+	phylo <input> <method>
+	where <input> is a lower triangular distance matrix from Clustal2Matrix.py
+	and   <method> is either <upgma> or <neighbor>
+OUTPUT:
+	The output will be the phylogenetic tree in newick format. I did not have the time to implement the topographical tree viewer, unfortunately.
+NOTE:
+	If the phylo executable is not present or not working for whatever reason, you can run with 'cargo run -- <input> <method>

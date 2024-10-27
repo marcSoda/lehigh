@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#What sihong said:
+#javac -cp ./ -d ./ Main.java
+#java -cp ./ojdbc8.jar:./ Main
+
+#What works:
+rm *.class
+javac Main.java
+java -cp ./ojdbc8.jar:./ Main

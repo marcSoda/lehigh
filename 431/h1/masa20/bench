@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+
+# This script serves to benchmark Vacworld using my masa20 package.
+# It calculates the average score over 5000 executions of vacworld
+# The rand seed is incremented from 0 to 4999.
+# It keeps a running total of each time the score was less than 840 for my own edification
+# NOTE: THIS SCRIPT MUST BE LOCATED WITHIN THE masa20 DIRECTORY AND RUN FROM WITHIN THE masa20 DIRECTORY
+# run with `./bench`
+# You may need to add execution permissions to bench with `chmod +x bench`
+
+cd ..
+hitctr=0
+ctr=0
+tot=0
+for (( ; ; ))
+do
+    score=$(java vacworld.VacuumWorld -rand $ctr -batch masa20 | grep "TOTAL SCORE" | cut -d " " -f 5)
+    echo Score: $score Seed: $ctr
+    tot=$((tot + score))
+    if [ $score -lt 840 ]; then
+        hitctr=$((hitctr + 1))
+    fi
+    ctr=$((ctr + 1))
+    if [ $ctr -eq 5000 ]; then
+        break
+    fi
+done
+echo $hitctr
+echo $(( tot / 5000 ))
+cd -

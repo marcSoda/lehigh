@@ -1,0 +1,9 @@
+image: "rust:latest"
+
+test:cargo:
+  script:
+  - rustup default nightly-2023-08-25
+  - rustup show
+  - rustc --version && cargo --version
+  - cargo test --all
+  - cargo bench --all

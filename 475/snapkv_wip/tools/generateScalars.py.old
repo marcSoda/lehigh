@@ -1,0 +1,61 @@
+#!/bin/env python3
+
+structures = {
+"I64": "int64_t",
+"I32": "int32_t",
+"I16": "int16_t",
+"I8": "int8_t",
+"U64": "uint64_t",
+"U32": "uint32_t",
+"U16": "uint16_t",
+"U8": "uint8_t",
+"FP32": "float"
+}
+
+programStart = """
+#include <cstdlib>
+#include <cstdint>
+#include <SiKV.h>
+
+#pragma once
+
+enum Scalar {"""
+
+scalarToTypeDecl = """
+template<Scalar S>
+struct ScalarToType {
+};
+"""
+
+getSize = """
+template<Scalar S>
+constexpr getSize() {
+    return sizeof(S::type);
+}
+
+template<Scalar S>
+constexpr getAlignment() {
+    return alignof(S::type);
+}
+"""
+
+def main():
+    print(programStart)
+    names = list(structures.keys())
+    for i in range(0, len(names) - 1):
+        print("\t" + names[i] + " = " + str(i) + ",")
+    i = len(names) - 1
+    print("\t" + names[i] + " = " + str(i))
+    print("};")
+    print(scalarToTypeDecl)
+
+    for e, t in structures.items():
+        print("template<>")
+        print("struct ScalarToType<" + e + "> {")
+        print("\tusing type = " + t + ";")
+        print("};")
+
+    print(getSize)
+
+if __name__ == "__main__":
+    main()

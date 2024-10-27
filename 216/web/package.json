@@ -1,0 +1,24 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "Web Front-End",
+  "dependencies": {
+    "@types/handlebars": "^4.1.0",
+    "@types/node": "^17.0.18",
+    "@types/typescript": "^2.0.0",
+    "bootstrap": "^3.4.1",
+    "handlebars": "^4.7.7",
+    "http-server": "^14.1.0",
+    "jasmine": "^3.7.0",
+    "jasmine-core": "^3.7.1",
+    "jquery": "^3.6.0",
+    "modal": "^1.2.0",
+    "react": "^17.0.2",
+    "tsconfig.json": "^1.0.0",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.0.13",
+    "@types/jquery": "^3.5.13"
+  }
+}

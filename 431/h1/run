@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# NOTE: USES jdk-8!
+
+javac masa20/*.java
+javac agent/*.java
+javac vacworld/*.java
+
+java vacworld.VacuumWorld -rand 0 masa20 # pick a random number
+# java vacworld.VacuumWorld -batch -rand 0 masa20 # run the entire thing at once
+
+rm masa20/*.class
+rm agent/*.class
+rm vacworld/*.class

@@ -1,0 +1,16 @@
+#EntryMenu {
+    font-size: 1vw;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+    padding: 2rem;
+}
+
+#EntryMenu a {
+    font-size: 2rem;
+    color: var(--text-color1);
+}
+
+#EntryMenu a:hover {
+    color: var(--accent);
+}

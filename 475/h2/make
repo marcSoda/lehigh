@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+source oneapi-tbb-2021.8.0/env/vars.sh
+clang++ -mavx -mfma -Loneapi-tbb-2021.8.0/lib/intel64/gcc4.8 -ltbb kmeans.cpp -o kmeans

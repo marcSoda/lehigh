@@ -1,0 +1,50 @@
+import sys, os, re
+
+print("PYTHON: Generating Code")
+
+outdir = sys.argv[1]
+projDir = sys.argv[2]
+
+def getIncludes():
+    headers = list()
+    for line in kernel.split("\n"):
+        if "#include" in line:
+            line = re.sub("#include ", "", line)
+            line = re.sub("(\"|<|>)", "", line)
+            headers.append(line)
+    return headers
+
+def processProgram(filename, programName):
+    k = open(filename, "r")
+    kernel = k.read()
+    k.close()
+
+    #print(headers)
+
+    kernels = "inline const char* " + programName + " = "
+
+    for l in kernel.split("\n"):
+        kernels += "\"" + l.replace("\\", "\\\\").replace("\"", "\\\"") + "\\n\"\n"
+    kernels += "\"\\n\";"
+
+    #kernels = "const char* "+ programName + " = \"" + kernel.replace("\"", "\\\"").replace("\n", "\\n") + "\";\n"
+    #kernels += "std::vector<std::string> programHeaders = {"
+
+    #for i in range(0,len(headers) - 1):
+    #    kernels += "\"" + headers[i] + "\","
+
+    #kernels += "\"" + headers[len(headers) - 1] + "\"};\n"
+    return kernels
+
+print("PYTHON: outputting to", outdir)
+
+kernels = "#include <vector>\n#pragma once\n" + processProgram(projDir + "/kernels/sum.cuh", "sumKernel") + processProgram(projDir + "/kernels/derefBlob.cuh", "derefBlobKernel")
+
+try:
+    os.mkdir(outdir + "/kernInclude")
+except FileExistsError:
+    print("PYTHON: Directory already exists")
+
+f = open(outdir + "/kernInclude/KernelCode.h", "w")
+f.write(kernels)
+f.close()

@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1 CSE264 Project 2
+  form()
+    p
+      | username:
+      input(name='username', value='', type='text', id='post_username')
+      |          name:
+      input(name='name', value='', type='text', id='post_name')
+      |          bio:
+      input(name='bio', value='', type='text', id='post_bio')
+  .ui.green.button#create
+    |   Create User
+  br
+  br
+  form()
+    p
+      | username:
+      input(name='username', value='', type='text', id='get_username')
+  .ui.blue.button#read
+    |   Read User
+  br
+  br
+  form()
+    p
+      | Old Username:
+      input(name='Old Username', value='', type='text', id='put_old_username')
+      | username:
+      input(name='username', value='', type='text', id='put_username')
+      |          name:
+      input(name='name', value='', type='text', id='put_name')
+      |          bio:
+      input(name='bio', value='', type='text', id='put_bio')
+  .ui.orange.button#update
+    |   Update User
+  br
+  br
+  form()
+    p
+      | Username:
+      input(name='Username', value='', type='text', id='delete_username')
+  .ui.red.button#destroy
+    |   Destroy User
+  br
+  br
+  .ui.pink.button#show
+    |  Show All Users
+  br
+  br
+  div(id='all')
+  br
+  br
+  form()
+    p
+      | Query:
+      input(name='Query', value='', type='text', id='get_query')
+  .ui.purple.button#query
+    | Query
+  div(id='query_div')

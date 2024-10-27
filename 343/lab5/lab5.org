@@ -1,0 +1,110 @@
+#+TITLE: CSE-343 | Firewall Exploration Lab
+#+AUTHOR: Marc Soda Jr
+#+OPTIONS: num:nil
+#+STARTUP: overview
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+* Task 1.A:
+- I followed the instructions as specified in the PDF and was successful. The only difference was that I added `MODULE_LICENSE("GPL");` to hello.c because I got a make error because the license was not specified.
+- Code:
+    [[./images/00.jpg]]
+- dmesg output:
+  [[./images/01.jpg]]
+* Task 1.B:
+** Task 1:
+ - Before adding the module, I am able to dig google.com with no issue. After adding the module, the request is blocked.
+ - Proof:
+     [[./images/02.jpg]]
+** Task 2:
+- Code
+    [[./images/03.jpg]]
+- After adding the module, I can the information being printed (through dmesg) corresponding to each hook.
+    [[./images/04.jpg]]
+** Task 3:
+- blockPing and blockTelnet code:
+    [[./images/06.jpg]]
+- The following screenshot shows two shells. One shows HostA running telnet and ping. The other is a filtered cat of syslog showing which packets were dropped as a result of this task. As you can see, the new kernel module is blocking telnet and icmp packets. The reason why I could not show dmesg output is because when I do `dmesg -k -w`, the output scrolls much too fast to read. I believe this is because I am connected to my seed server over ssh.
+    [[./images/05.jpg]]
+
+* Task 2:
+** Task 2A:
+- Before manipulating the IP tables I can ping and telnet into the router (10.9.0.11) just fine.
+- After manipulating the IP tables with the specified command, I can ping the router, but I can't telnet into it.
+- These rules drop ICMP packets except for PING.
+** Task 2B:
+- Commands (see screenshot for iptables rules output):
+  - iptables -A FORWARD -i eth0 -p icmp --icmp-type echo-request -j DROP
+  - iptables -A FORWARD -i eth1 -p icmp --icmp-type echo-request -j ACCEPT
+  - iptables -A FORWARD -i eth0 -p icmp --icmp-type echo-reply -j ACCEPT
+  - iptables -P FORWARD DROP
+- Observations (see screenshot for proof):
+  - HostA (outside) cannot ping Host1 (inside).
+  - HostA (outside) can ping the router.
+  - HostA (outside) cannot telnet Host1 (inside).
+  - Host1 (inside) can ping HostA (outside)
+  - Host1 (inside) cannot telnet HostA (outside)
+- Screenshot
+  - Top right is Host1. Bottom left is router. Bottom right is HostA. Hostnames reflected in prompt.
+    [[./images/07.jpg]]
+** Task 2C:
+- Commands (see screenshot for iptables rules output)
+  - iptables -A FORWARD -i eth0 -p tcp -d 192.160.60.5 --dport 23 -j ACCEPT
+  - iptables -A FORWARD -i eth1 -p tcp -s 192.160.60.5 --sport 23 -j ACCEPT
+  - iptables -P FORWARD DROP
+  - iptables -A FORWARD -i eth0 -p tcp -sport 5000 -j ACCEPT
+- Observations (see screenshot for proof)
+  - Host1 (inside) is able to telnet into other hosts on the internal network.
+  - HostA (outside) is able to telnet to Host1 (inside), but not to any other internal hosts.
+  - Host1 (inside) is unable to telnet to HostA (outside).
+  - Note that other internal and external hosts were tested and the specifications were met. See screenshot.
+[[./images/08.jpg]]
+* Task 3:
+** Task 3A:
+*** ICMP Experiment:
+- After pinging Host1 from the router, conntrack -L shows details about the connection that was made.
+- The ICMP connection state was kept for 30 seconds.
+*** UDP Experiment:
+- After communicating to Host1 from the router, conntrack -L shows details about the connection that was made.
+- The UDP connection state was kept for 30 seconds.
+*** TCP Experiment:
+- After communicating from Host1 from the router, conntrack -L shows details about the connection that was made.
+- The TCP connection state was kept for 120 seconds.
+** Task 3B:
+*** Commands:
+- iptables -A FORWARD -p tcp -i eth0 -d 192.168.60.5 --dport 23 --syn -m conntrack --ctstate NEW -j ACCEPT
+- iptables -A FORWARD -p tcp -i eth1 --syn -m conntrack --ctstate NEW -j ACCEPT
+- iptables -A FORWARD -p tcp -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+- iptables -A FORWARD -p tcp -j DROP
+- iptables -A FORWARD ACCEPT
+*** Observations (see screenshot):
+- HostA (outside) can telnet to Host1 (inside)
+- Host1 (inside) can telnet to HostA (outside)
+- These patterns are maintained for other internal and external hosts.
+[[./images/09.jpg]]
+*** Conntrack advantages:
+- Consumes less CPU because caching
+*** Conntrack disadvantages:
+- Consumes more memory because connection states need to be saved for a certain amount of time.
+- Can be poor at handling a high volume of connections per second.
+* Task 4:
+- After running the first command only, pinging 192.168.60.5 is unaffected.
+- After adding the second rule, the following behavior is observed:
+  - The first 5 pings go through as normal.
+  - Pings then begin being blocked due to the 5 connection burst limit and the 10/minute limit. I ended up getting a 67% packet loss after 10 successful pings.
+* Task 5:
+** Round Robin Mode
+*** Commands:
+- iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode nth --every 3 --packet 0 -j DNAT --to-destination 192.168.60.5:8080
+- iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 192.168.60.6:8080
+- iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode nth --every 1 --packet 0 -j DNAT --to-destination 192.168.60.7:8080
+- Each rule chooses which number packet (out of three) to send to each different server.
+*** Observations
+- After adding the rules, I can make a connection and send a message from HostA to the router. Each time a connection is made, it is forwarded to a different server on the network. First Host1, then Host2, then Host3, then repeat. The load balancing task was successful. See screenshot.
+[[./images/10.jpg]]
+** Random Mode
+*** Commands
+- iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode random --probability .3333 -j DNAT --to-destination 192.168.60.5:8080
+- iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode random --probability .5 -j DNAT --to-destination 192.168.60.6:8080
+- iptables -t nat -A PREROUTING -p udp --dport 8080 -m statistic --mode random --probability 1 -j DNAT --to-destination 192.168.60.7:8080
+- Apparently making the probability for each rule .3333 is wrong. When I did that I found that the connection would get dropped sometimes. I had to look it up and apparently you are supposed to make the first one .3333, the second .5, and the third 1. This has something to do with the fact that the rules are executed sequentially. With this setup, each host has a 33% chance of being selected.
+*** Observations
+[[./images/11.jpg]]

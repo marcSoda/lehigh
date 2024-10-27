@@ -1,0 +1,90 @@
+:root {
+    --border-color: #484848;
+    --bg1: #1D1D1D;
+    --bg2: #181818;
+    --grey1: #909096;
+    --accent: #0087D7;
+    --shadow-color: black;
+    --themeTog-color: #E6E6E6;
+    --text-color1: #484848;
+    --text-color2: var(--grey1);
+    --nav-thickness: 60px;
+    --search-thickness: 800px;
+    color: var(--text-color1);
+    transition: .2s;
+} 
+
+body {
+    --border-color: #484848;
+    --bg1: #1D1D1D;
+    --bg2: #181818;
+    --grey1: #909096;
+    --accent: #0087D7;
+    --shadow-color: black;
+    --themeTog-color: #E6E6E6;
+    --text-color1: #D6D6D6;
+    --text-color2: var(--grey1);
+    --nav-thickness: 60px;
+    --search-thickness: 800px;
+    color: var(--text-color1);
+    transition: .2s;
+}
+
+body.light {
+    --border-color: #484848;
+    --bg1: #E6E6E6;
+    --bg2: #EFEFEF;
+    --grey1: #909096;
+    --accent: #0087D7;
+    --shadow-color: rgba(0, 0, 0, 3);
+    --themeTog-color: #1D1D1D;
+    --text-color1: #484848;
+    --text-color2: var(--grey1);
+    --nav-thickness: 60px;
+    --search-thickness: 800px;
+    color: var(--text-color1);
+    transition: .2s;
+}
+
+* {
+    /* border: none; */
+    margin: 0;
+}
+
+ a, a:hover, a:focus, a:active {
+      text-decoration: none;
+      color: inherit;
+ }
+
+h1 {
+    margin: 0;
+}
+
+/* switch the default font for the body, and remove top/bottom/left/right margin */
+body {
+    font-family: Helvetica, sans-serif;
+    background: var(--bg1);
+}
+
+/* /\* make the form elements wide, and force a line break after each *\/ */
+/* input, label, textarea { */
+/*     display: block; */
+/*     width: 200px; */
+/* } */
+
+/* /\* put some space between textareas and the buttons that follow them *\/ */
+/* textarea { */
+/*     margin-bottom: 5px; */
+/* } */
+
+/* /\* put some left space before form elements *\/ */
+/* label, input, textarea, #addButton, #editButton { */
+/*     margin-left: 15px; */
+/* } */
+
+/* /\* custom formatting for the span where we put the creation date *\/ */
+/* #editCreated { */
+/*     display: block; */
+/*     margin-bottom: 5px; */
+/*     margin-left: 15px; */
+/* } */

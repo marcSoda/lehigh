@@ -1,0 +1,135 @@
+:root {
+    --entry-margin: .5rem;
+    --content-width: 40vw;
+    --content-heading-height: 6rem;
+}
+
+#svg-symbol {
+    display: none;
+}
+
+#ElementList {
+    font-size: 1vw;
+    width: var(--content-width);
+    margin: 0 auto;
+    background-color: var(--bg1);
+    border: none !important;
+}
+
+#ElementList .panel-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    width: var(--content-width);
+    /* height: var(--content-heading-height); */
+    background-color: var(--bg1);
+    color: var(--text-color1);
+    border: 1px solid var(--border-color) !important;
+    text-align: left;
+}
+
+.panel-heading .panel-title {
+    font-size: 3rem;
+}
+
+#contents {
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(var(--content-heading-height) + var(--entry-margin));
+    color: var(--text-color1);
+}
+
+.ElementList-element {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color) !important;
+    min-height: 5rem;
+    margin-bottom: var(--entry-margin);
+    padding: 2rem;
+}
+
+.ElementList-heading {
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.ElementList-heading .ElementList-userName {
+    margin-right: auto;
+    font-size: 2.5rem;
+}
+
+.ElementList-heading .ElementList-menu-div {
+    display: flex;
+    justify-content: center;
+    width: 15%;
+}
+
+.ElementList-menu-div:hover >.ElementList-svg {
+    fill: var(--accent);
+}
+
+.ElementList-heading .ElementList-svg {
+    height: 75%;
+    fill: var(--text-color1);
+    pointer-events: none;
+    transition: .5s;
+}
+
+.ElementList-subject {
+    font-size: 2.5rem;
+    color: var(--text-color2);
+}
+
+.ElementList-message {
+    font-size: 2rem;
+    color: var(--text-color1);
+}
+
+.ElementList-file {
+  border: #fbfcf9;
+  border-radius: 4px;
+  padding: 5px;
+} 
+
+.ElementList-feedbackDiv {
+    margin-bottom: .5rem;
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 2rem 5rem 0rem 5rem;
+    height: 2rem;
+}
+
+.ElementList-feedbackDiv h1 {
+    font-size: 2rem;
+    transition: .3s;
+}
+
+.ElementList-upvote-div,
+.ElementList-downvote-div,
+.ElementList-comment-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.ElementList-feedbackDiv .ElementList-svg {
+    width: 3rem;
+    height: auto;
+    fill: var(--text-color1);
+    pointer-events: none;
+    transition: .3s;
+}
+
+.ElementList-upvote-div:hover > .ElementList-svg,
+.ElementList-downvote-div:hover > .ElementList-svg,
+.ElementList-upvote-div:hover > h1,
+.ElementList-comment-div:hover > .ElementList-svg,
+.ElementList-comment-div:hover > h1,
+.ElementList-downvote-div:hover > h1 {
+    fill: var(--accent);
+    color: var(--accent);
+}

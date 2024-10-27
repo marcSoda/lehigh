@@ -1,0 +1,22 @@
+-- 1
+    SELECT year, month, day, shares_traded,
+    RANK() OVER (ORDER BY shares_traded DESC) AS MOSTSHARES
+    FROM nyse;
+-- 2
+    SELECT year, month, day,
+    SUM(shares_traded) as SHARES,
+    SUM(num_trades) as TRADES,
+    SUM(dollar_volume) as VOLUME
+    FROM nyse
+    GROUP BY ROLLUP(year, month, day);
+-- 3
+    2477
+    -- I changed rollup (in previous query) to cube and counted the rows
+-- 4
+    SELECT year, month,
+    SUM(vol) OVER (ORDER BY year, month ROWS 2 PRECEDING) as SUM_VOLUME,
+    ROUND(AVG(vol) over (ORDER BY year, month ROWS 2 PRECEDING), 0) AS AVG_VOLUME
+    FROM (SELECT year, month, SUM(dollar_volume) as vol
+    FROM nyse GROUP BY year, month);
+-- 5
+    GROUPBY ROLLUP(a), ROLLUP(b), ROLLUP(c), ROLLUP(d)

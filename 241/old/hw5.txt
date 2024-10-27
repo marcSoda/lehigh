@@ -1,0 +1,25 @@
+create or replace PROCEDURE TEACHING(v_id INTEGER) IS
+v_count_instructor INTEGER;
+v_count_teaches INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO v_count_instructor FROM instructor WHERE id=v_id;
+    SELECT COUNT(*) INTO v_count_teaches FROM teaches WHERE id=v_id;
+    IF (v_count_instructor != 1) THEN
+        DBMS_OUTPUT.PUT_LINE('Instructor with ID ' || v_id || ' does not exist.');
+    ELSIF (v_count_teaches) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Instructor with ID ' || v_id || ' does not have a teaching record.');
+    ELSE
+        FOR rec IN (
+            select c.dept_name, c.course_id, c.title, te.sec_id, te.semester, te.year, ta.enrollment from instructor i
+                inner join teaches te on te.id = i.id
+                inner join (
+                    select count(*) as enrollment, course_id, semester, year from takes group by course_id, semester, year
+                ) ta on ta.course_id = te.course_id and ta.semester=te.semester and ta.year=te.year
+                inner join course c on c.course_id=te.course_id
+                where i.id = v_id
+                order by c.dept_name, c.course_id, te.year, te.semester)
+        LOOP
+            DBMS_OUTPUT.PUT_LINE(rpad(rec.dept_name, 15) || rpad(rec.course_id, 4) || rpad(rec.title, 30) || rpad(rec.sec_id, 3) || rpad(rec.semester, 8) || rpad(rec.year, 7) || rec.enrollment);
+        END LOOP;
+    END IF;
+END TEACHING;

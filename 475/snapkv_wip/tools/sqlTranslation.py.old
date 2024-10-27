@@ -1,0 +1,8 @@
+from jinja2 import Environment, FileSystemLoader
+import copy
+import sys, os
+import relational
+
+if __name__ == "__main__":
+    q3 = relational.tpccQ3()
+    print(q3.loopConditions())

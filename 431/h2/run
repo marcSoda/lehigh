@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# NOTE: USES jdk-8
+
+javac masa20/*
+javac agent/*
+javac pacworld/*
+# java pacworld.PackageWorld -rand seedNum masa20 numAgents numPacks numDests worldSize
+java pacworld.PackageWorld -rand 69 masa20 15 100 8
+#java pacworld.PackageWorld -rand 3 masa20 2 40 8
+#java pacworld.PackageWorld -rand 4 masa20 2 40 8
+
+
+rm masa20/*.class
+rm agent/*.class
+rm pacworld/*.class

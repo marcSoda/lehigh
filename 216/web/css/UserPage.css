@@ -1,0 +1,135 @@
+:root {
+    --entry-margin: .5rem;
+    --content-width: 40vw;
+    --content-heading-height: 6rem;
+}
+
+#svg-symbol {
+    display: none;
+}
+
+#UserPage {
+    font-size: 1vw;
+    width: var(--content-width);
+    margin: 0 auto;
+    background-color: var(--bg1);
+    border: none !important;
+}
+
+#UserPage .panel-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    width: var(--content-width);
+    height: var(--content-heading-height);
+    background: white;
+    background-color: var(--bg1);
+    color: var(--text-color1);
+    border: 1px solid var(--border-color) !important;
+    text-align: left;
+}
+
+.panel-heading .panel-title {
+    font-size: 3rem;
+}
+
+.panel-heading textarea {
+    color: black;
+}
+#content {
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(var(--content-heading-height) + var(--entry-margin));
+    color: var(--text-color1);
+    position: absolute; 
+    top: 160px;
+}
+
+.UserPage-element {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color) !important;
+    min-height: 5rem;
+    margin-bottom: var(--entry-margin);
+    padding: 2rem;
+}
+
+.UserPage-heading {
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.UserPage-heading .ElementList-userName {
+    margin-right: auto;
+    font-size: 2.5rem;
+}
+
+.UserPage-heading .ElementList-menu-div {
+    display: flex;
+    justify-content: center;
+    width: 15%;
+}
+
+.UserPage-menu-div:hover >.ElementList-svg {
+    fill: var(--accent);
+}
+
+.UserPage-heading .ElementList-svg {
+    height: 75%;
+    fill: var(--text-color1);
+    pointer-events: none;
+    transition: .5s;
+}
+
+.UserPage-subject {
+    font-size: 2.5rem;
+    color: var(--text-color2);
+}
+
+.UserPage-message {
+    font-size: 2rem;
+    color: var(--text-color1);
+}
+
+.UserPage-feedbackDiv {
+    margin-bottom: .5rem;
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 2rem 5rem 0rem 5rem;
+    height: 2rem;
+}
+
+.UserPage-feedbackDiv h1 {
+    font-size: 2rem;
+    transition: .3s;
+}
+
+.UserPage-upvote-div,
+.UserPage-downvote-div,
+.UserPage-comment-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.UserPage-feedbackDiv .ElementList-svg {
+    width: 3rem;
+    height: auto;
+    fill: var(--text-color1);
+    pointer-events: none;
+    transition: .3s;
+}
+
+.UserPage-upvote-div:hover > .ElementList-svg,
+.UserPage-downvote-div:hover > .ElementList-svg,
+.UserPage-upvote-div:hover > h1,
+.UserPage-comment-div:hover > .ElementList-svg,
+.UserPage-comment-div:hover > h1,
+.UserPage-downvote-div:hover > h1 {
+    fill: var(--accent);
+    color: var(--accent);
+}

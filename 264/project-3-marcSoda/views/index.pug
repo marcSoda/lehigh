@@ -1,0 +1,128 @@
+extends layout
+
+block content
+  h1 CSE264 Project 2
+  form()
+    p
+      | title:
+      input(name='title', value='', type='text', id='post_film_title')
+      |          body:
+      input(name='body', value='', type='text', id='post_film_body')
+  .ui.green.button#create
+    |   Create Film
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='get_film_fid')
+  .ui.blue.button#read
+    |   Read Film
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='put_film_fid')
+      | title:
+      input(name='title', value='', type='text', id='put_film_title')
+      |          body:
+      input(name='name', value='', type='text', id='put_film_body')
+      |          date:
+      input(name='date', value='', type='text', id='put_film_date')
+  .ui.orange.button#update
+    |   Update Film
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='delete_film_fid')
+  .ui.red.button#destroy
+    |   Destroy Film
+  br
+  br
+  .ui.pink.button#show
+    |  Show All Films
+  br
+  br
+  div(id='all_films')
+  br
+  br
+  form()
+    p
+      | Query:
+      input(name='Query', value='', type='text', id='get_films_query')
+  .ui.purple.button#query_films
+    | Query
+  div(id='query_films_div')
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='post_rev_fid')
+      | title:
+      input(name='title', value='', type='text', id='post_rev_title')
+      |          body:
+      input(name='name', value='', type='text', id='post_rev_body')
+  .ui.green.button#rev_post
+    |  create review
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='get_one_rev_fid')
+      | ReviewID:
+      input(name='ReviewID', value='', type='text', id='get_one_rev_rid')
+  .ui.blue.button#rev_get_one
+    |   Show One Film Review
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='put_rev_fid')
+      | ReviewID:
+      input(name='ReviewID', value='', type='text', id='put_rev_rid')
+      | title:
+      input(name='title', value='', type='text', id='put_rev_title')
+      |          body:
+      input(name='name', value='', type='text', id='put_rev_body')
+      |          date:
+      input(name='date', value='', type='text', id='put_rev_date')
+  .ui.orange.button#rev_put
+    |   Update Review
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='delete_rev_fid')
+      | ReviewID:
+      input(name='ReviewID', value='', type='text', id='delete_rev_rid')
+  .ui.red.button#rev_delete
+    |   Destroy Review
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='get_all_rev_fid')
+  .ui.pink.button#rev_get_all
+    |   Show all Film Reviews
+  br
+  br
+  div(id='all_film_reviews')
+  br
+  br
+  form()
+    p
+      | FilmID:
+      input(name='FilmID', value='', type='text', id='get_revs_query_fid')
+      | Query:
+      input(name='Query', value='', type='text', id='get_revs_query')
+  .ui.purple.button#query_revs
+    | Query
+  div(id='query_revs_div')
+  br
+  br
