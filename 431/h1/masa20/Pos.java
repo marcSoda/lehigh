@@ -4,8 +4,7 @@ import vacworld.Direction;
 
 // represents static locations in the map
 class Pos {
-    int x;
-    int y;
+    int x,y;
 
     Pos(int x, int y) {
         this.x = x;
@@ -35,5 +34,9 @@ class Pos {
         Pos comp = (Pos)obj;
         if (this.x == comp.x && this.y == comp.y) return true;
         return false;
+    }
+
+    public int hashCode() {
+        return 31 * Integer.hashCode(x) + Integer.hashCode(y);
     }
 }

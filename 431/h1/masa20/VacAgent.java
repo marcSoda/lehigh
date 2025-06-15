@@ -6,9 +6,8 @@ import vacworld.*;
 /*
   * Intro and Benchmarking
     This VacAgent implement is, I think, very efficient. I benchmarked it with the BASH script
-    that I provided with this code (called bench). My implementation is only 375 lines of code.
-    I tested it on 5000 seeds (0-4999) and it achieved an average score of 896, never once
-    dipped below a score of 820 and only dipped below 840 about 4 times. Note that I didn't
+    that I provided with this code (called bench). I tested it on 5000 seeds (0-4999) and
+    it achieved an average score of 903, never once dipped below a score of 840. Note that I didn't
     rigorously follow all of the production-level Java conventions because there was no reason
     to and I don't like the style of it. For example, I don't have a getter and a setter for every
     state var nor did I privatize all of the functions and variables that may be able to be privatized.
@@ -28,8 +27,7 @@ import vacworld.*;
     on (head) and the direction of the agent. The map is all that is required to effectively
     represent the agent's internal state. Map's `process` function takes a percept and applies
     the information to the Map by adding cells to the graph and propagating updated information.
-    The Map has a nice iterator which is used to traverse the entire graph in a breadth-first
-    manner.
+    The Map index member is used to quickly lookup Cell refs by Pos without having to walk the graph.
   * Pos:
     The `Pos` class simply stores the position of the Cell. It's not all that necessary. When
     I started building this out, I thought it would be more instrumental, but now it could
@@ -40,11 +38,10 @@ import vacworld.*;
     of the moves that the Agent intends to take. These moves are not always followed though. For example,
     if the brain previously calculated that it wants to visit or should pass through a cell which has since
     been realized to be an obstacle, the agent will not hit the obstacle, it will recalculate the move set.
-    Also, if the Agent is over dirt, it will ignore the move list and sick it up, resuming reading from the
+    Also, if the Agent is over dirt, it will ignore the move list and suck it up, resuming reading from the
     move set on the next iteration. To generate a set of moves, the Brain simply calls getMoves() which will
-    grab the lowest cost node that is not explored and not an obstacle. It does so by leveraging the
-    `estimateTotalCost()` function which estimates the cost of all of the moves and turns the agent will need
-    to take to get to each cell. The cell with the lowest total cost is returned. Note that if there are no
+    grab the lowest cost node that is not explored and not an obstacle. It does so doing a breadth-first-search
+    on the graph and returing the first Cell that is not explored and not an obstacle. Note that if there are no
     remaining unexplored cells, getMoves returns null which triggers the Agent to shutoff. It then gets a list
     of cells which represents the most optimal path from the head to the target cell. Note that this path is
     simply a list of cells, the move set is calculated later. The most optimal path to the least-cost cell
@@ -67,6 +64,6 @@ public class VacAgent extends Agent {
     }
 
     public String getId() {
-        return "CreamMachine";
+        return "";
     }
 }

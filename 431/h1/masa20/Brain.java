@@ -3,6 +3,7 @@ package masa20;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Queue;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,19 +15,13 @@ import vacworld.*;
 // and coordinate the agent's moves
 
 class Brain {
-    // the Agent's 'understanding' of the environment
-    Map map;
-    // the optimal set of Actions for the agent to take
-    List<Action> moves;
-    // overrides the next Action in moves and forces the agent to suck immediately
-    boolean suckNow = false;
+    Map map; // Agent's env map
+    List<Action> moves; // optimal set of Actions for agent to take
+    boolean suckNow = false; // override next Action in moves with suck action
 
-    Brain() {
-        map = new Map();
-    }
+    Brain() { map = new Map(); }
 
-    // update the environment
-    // instructs the agent to suck if need be
+    // update the environment, instructs the agent to suck now if need be
     void learn(VacPercept p) {
         suckNow = map.process(p);
     }
@@ -35,9 +30,8 @@ class Brain {
     Action think() {
         if (suckNow) return new SuckDirt();
         // get moves if there are none
-        if (moves == null || moves.isEmpty()) {
+        if (moves == null || moves.isEmpty())
             moves = getMoves();
-        }
         // shutoff if moves is still null
         if (moves == null) return new ShutOff();
         Action move = moves.remove(0);
@@ -56,55 +50,64 @@ class Brain {
         return move;
     }
 
+
     // a* algorithm to get the optimal path between two cells
     // note that the returned path has no information about direction
     // the returned path will need to be operated on to get a sequence
     // of Actions that included turn info
     ArrayList<Cell> getOptimalPath(Cell from, Cell target) {
-        ArrayList<Cell> path = new ArrayList<Cell>();
-        HashSet<Cell> seen = new HashSet<Cell>();
-        PriorityQueue<Cell> queue = new PriorityQueue<Cell>(
-            Comparator.comparingInt(c -> estimateTotalCost(c, target)));
-        HashMap<Cell, Cell> parent = new HashMap<Cell, Cell>(); // need to store parents for easy traversal
-        queue.add(from);
-
-        while (!queue.isEmpty()) {
-            Cell current = queue.poll();
-            seen.add(current);
-            if (current.equals(target)) {
-                // construct path after the target is found
-                while (current != null) {
-                    path.add(0, current);
-                    current = parent.get(current);
-                }
-                break;
+        HashMap<Cell, Integer> gScore = new HashMap<>();
+        PriorityQueue<Cell> open = new PriorityQueue<>(
+            Comparator.comparingInt(c -> gScore.get(c) + estimateTotalCost(c, target)));
+        HashMap<Cell, Cell> parent = new HashMap<>();
+        gScore.put(from, 0);
+        open.add(from);
+        while (!open.isEmpty()) {
+            Cell current = open.poll();
+            if (current == target) {
+                ArrayList<Cell> path = new ArrayList<>();
+                for (Cell c = current; c != null; c = parent.get(c))
+                    path.add(0, c);
+                return path;
             }
+            int curDir = parent.containsKey(current)
+                        ? getDirectionTowards(parent.get(current), current)
+                        : map.dir;
             for (Cell neighbor : current.getNeighbors()) {
-                if (neighbor.obstacle || seen.contains(neighbor)) continue;
-                int dist = estimateMoveCost(neighbor, target);
-                if (!queue.contains(neighbor)) queue.add(neighbor);
-                // update parent if this path is better than the previous best
-                if (!parent.containsKey(neighbor) || dist < estimateTotalCost(neighbor, target))
+                if (neighbor == null || neighbor.obstacle) continue;
+                int stepDir = getDirectionTowards(current, neighbor);
+                int d = Math.abs(curDir - stepDir);
+                int turnCost = d == 3 ? 1 : d;
+                int tentativeG = gScore.get(current) + 2 + turnCost;
+                if (tentativeG < gScore.getOrDefault(neighbor, Integer.MAX_VALUE)) {
                     parent.put(neighbor, current);
+                    gScore.put(neighbor, tentativeG);
+                    open.add(neighbor);
+                }
             }
         }
-        return path;
+        return new ArrayList<>(); // unreachable
     }
 
-    // iterates over the map and returnes the cell that can be reached with the lowest cost
+    // iterates over the map (BFS) and returnes the cell that can be reached with the lowest cost
     Cell getLowestCostUnexplored() {
-        Cell lowestCostCell = null;
-        int lowestCost = Integer.MAX_VALUE;
-        for (Cell c : map) {
-            if (!c.obstacle && !c.explored) {
-                int cost = estimateTotalCost(map.head, c);
-                if (cost < lowestCost) {
-                    lowestCost = cost;
-                    lowestCostCell = c;
-                }
+        Queue<Cell> q = new LinkedList<>();
+        HashSet<Cell> seen = new HashSet<>();
+        q.add(map.head);
+        seen.add(map.head);
+
+        while (!q.isEmpty()) {
+            Cell cur = q.poll();
+            if (!cur.obstacle && !cur.explored)
+                return cur;
+            for (Cell neighbor : cur.getNeighbors()) {
+                if (neighbor == null || neighbor.obstacle || seen.contains(neighbor))
+                    continue;
+                seen.add(neighbor);
+                q.add(neighbor);
             }
         }
-        return lowestCostCell;
+        return null;
     }
 
     // estimates the cost to travel between two cells
@@ -123,11 +126,10 @@ class Brain {
     int getDirectionTowards(Cell current, Cell target) {
         int x = target.pos.x - current.pos.x;
         int y = target.pos.y - current.pos.y;
-        if (Math.abs(x) >= Math.abs(y)) {
+        if (Math.abs(x) >= Math.abs(y))
             return x > 0 ? Direction.EAST : Direction.WEST;
-        } else {
+        else
             return y > 0 ? Direction.NORTH : Direction.SOUTH;
-        }
     }
 
     // estimates the cost of the move(s) required to travel between two cells

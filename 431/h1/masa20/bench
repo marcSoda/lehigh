@@ -26,5 +26,5 @@ do
     fi
 done
 echo $hitctr
-echo $(( tot / 5000 ))
+echo "scale=2; $tot / 5000" | bc
 cd -

@@ -1,19 +1,18 @@
 package masa20;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashMap;
 import vacworld.*;
 
 // the internal state of the Agent
-class Map implements Iterable<Cell> {
-    Cell head;
-    int dir;
+class Map {
+    Cell head; // where agent is
+    int dir; // direction agent is facing
+    HashMap<Pos,Cell> index = new HashMap<>(); // hashmap of pos -> cell ref
 
     Map() {
         head = new Cell(new Pos(0, 0), false);
         dir = Direction.NORTH;
+        index.put(head.pos, head);
     }
 
     // build out a more complete picture of the environment
@@ -42,63 +41,14 @@ class Map implements Iterable<Cell> {
     }
 
     // move the head forward
-    void goForward() {
-        head = head.getRelativeCell(this, Direction.NORTH);
-    }
+    void goForward() { head = head.getRelativeCell(this, Direction.NORTH); }
 
     // update the direction to the left
-    void turnLeft() {
-        dir = (dir + 3) % 4;
-    }
+    void turnLeft() { dir = (dir + 3) % 4; }
 
     // update the direction to the right
-    void turnRight() {
-        dir = (dir + 1) % 4;
-    }
+    void turnRight() { dir = (dir + 1) % 4; }
 
-    // search the map for a cell based on its position
-    Cell getCellByPos(Pos pos) {
-        for (Cell c : this) {
-            if (c.pos.equals(pos)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Iterator<Cell> iterator() {
-        return new MapIter(head);
-    }
-
-    // iterator over all cells in the map
-    // traverses the map graph in a breadth-first manner
-    private class MapIter implements Iterator<Cell> {
-        private Queue<Cell> queue;
-        private HashSet<Cell> seen;
-
-        public MapIter(Cell start) {
-            this.queue = new LinkedList<>();
-            this.seen = new HashSet<>();
-            this.queue.add(start);
-            this.seen.add(start);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !queue.isEmpty();
-        }
-
-        @Override
-        public Cell next() {
-            Cell next = queue.poll();
-            for (Cell c : next.getNeighbors()) {
-                if (!seen.contains(c)) {
-                    queue.add(c);
-                    seen.add(c);
-                }
-            }
-        return next;
-        }
-    }
+    // get cell based on position
+    Cell getCellByPos(Pos p) { return index.get(p); }
 }

@@ -6,11 +6,9 @@ import vacworld.*;
 
 // represents a single cell in the map
 class Cell {
-    // if the cell is an obstacle
-    boolean obstacle = false;
-    // if the cell has been explored
-    boolean explored = false;
-    Pos pos; //cell's x and y position
+    boolean obstacle = false; // if the cell is an obstacle
+    boolean explored = false; // if the cell has been explored
+    Pos pos; // cell's x and y position
     Cell n;  // cell to the north
     Cell s;  // cell to the south
     Cell e;  // cell to the east
@@ -36,55 +34,46 @@ class Cell {
     }
 
     // gets the neighbor cell that is in a direction relative to the direction the agent is facing
+    // creates and indexes a new neighbor Cell when that square has never been seen.
     Cell getRelativeCell(Map map, int relativeDir) {
-        switch((map.dir + relativeDir) % 4) {
-            case Direction.NORTH:
-                if (n == null) {
-                    n = map.getCellByPos(pos.getRelativePos(map.dir, relativeDir));
-                    if (n == null) n = new Cell();
-                }
-                return n;
-            case Direction.SOUTH:
-                if (s == null) {
-                    s = map.getCellByPos(pos.getRelativePos(map.dir, relativeDir));
-                    if (s == null) s = new Cell();
-                }
-                return s;
-            case Direction.EAST:
-                if (e == null) {
-                    e = map.getCellByPos(pos.getRelativePos(map.dir, relativeDir));
-                    if (e == null) e = new Cell();
-                }
-                return e;
-            case Direction.WEST:
-                if (w == null) {
-                    w = map.getCellByPos(pos.getRelativePos(map.dir, relativeDir));
-                    if (w == null) w = new Cell();
-                }
-                return w;
+        int absDir = (map.dir + relativeDir) % 4;
+        Cell neighbour = null;
+        switch (absDir) {
+            case Direction.NORTH: neighbour = n; break;
+            case Direction.SOUTH: neighbour = s; break;
+            case Direction.EAST: neighbour = e; break;
+            case Direction.WEST: neighbour = w; break;
         }
-        return null;
+        if (neighbour == null) {
+            Pos relPos = pos.getRelativePos(map.dir, relativeDir);
+
+            neighbour = map.getCellByPos(relPos);
+            if (neighbour == null) {
+                neighbour = new Cell();
+                map.index.put(relPos, neighbour);
+            }
+
+            switch (absDir) {
+                case Direction.NORTH: n = neighbour; break;
+                case Direction.SOUTH: s = neighbour; break;
+                case Direction.EAST: e = neighbour; break;
+                case Direction.WEST: w = neighbour; break;
+            }
+        }
+        return neighbour;
     }
 
     // set the cell relative to the direction the player is facing
-    // cardinalDir is the direction the player is facing
+    // cardinalDir is the direction the agent is facing
     // relative dir is the direction relative to cardinalDir of the position to create
     // new cell is the cell to overwrite the found cell with
     void setRelativeCell(int cardinalDir, int relativeDir, Cell newCell) {
         int cellDir = (cardinalDir + relativeDir) % 4;
         switch(cellDir) {
-            case Direction.NORTH:
-                n = newCell;
-                return;
-            case Direction.SOUTH:
-                s = newCell;
-                return;
-            case Direction.EAST:
-                e = newCell;
-                return;
-            case Direction.WEST:
-                w = newCell;
-                return;
+            case Direction.NORTH: n = newCell; break;
+            case Direction.SOUTH: s = newCell; break;
+            case Direction.EAST: e = newCell; break;
+            case Direction.WEST: w = newCell; break;
         }
     }
 }
